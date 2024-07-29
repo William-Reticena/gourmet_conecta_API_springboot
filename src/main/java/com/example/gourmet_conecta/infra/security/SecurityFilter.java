@@ -33,8 +33,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     String requestURI = request.getRequestURI();
 
-    System.out.println(requestURI);
-
     if (!PUBLIC_URLS.contains(requestURI)) {
 
       String token = this.recoverToken(request);

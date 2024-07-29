@@ -24,45 +24,30 @@ import com.example.gourmet_conecta.repository.UserRepository;
 @RequestMapping("/auth")
 public class AuthController {
 
-  // @Autowired
-  // private ApplicationContext context;
-
   @Autowired
   private AuthenticationManager authenticationManager;
 
   @Autowired
   private UserRepository repository;
 
-  // AuthController(AuthenticationManager authenticationManager) {
-  // this.authenticationManager = authenticationManager;
-  // }
-
   @Autowired
   private TokenService tokenService;
 
   @PostMapping("/login")
   public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO authenticationDTO) {
-    System.out.println("authenticationDTO: \n" + authenticationDTO);
 
     Authentication usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.email(),
         authenticationDTO.password());
 
-    System.out.println("usernamePassword: \n" + usernamePassword);
     Authentication auth = this.authenticationManager.authenticate(usernamePassword);
 
-    System.out.println("auth" + auth);
-
     String token = tokenService.generateToken((UserEntity) auth.getPrincipal());
-    // String token = "sddfd";
-
-    System.out.println("token" + token);
 
     return ResponseEntity.ok(new LoginResponseDTO(token));
   }
 
   @PostMapping("/register")
   public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO) {
-    System.out.println("authenticationDTO: \n" + registerDTO);
 
     if (this.repository.findByEmail(registerDTO.email()) != null) {
       return ResponseEntity.badRequest().body("Email already registered");

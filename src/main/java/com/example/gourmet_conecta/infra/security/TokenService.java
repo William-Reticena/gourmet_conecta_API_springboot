@@ -15,8 +15,6 @@ public class TokenService {
   private String secret;
 
   public String generateToken(UserEntity user) {
-    System.out.println("secret: " + secret);
-    System.out.println("user: " + user);
     try {
       Algorithm algorithm = Algorithm.HMAC256(secret);
 
@@ -24,8 +22,6 @@ public class TokenService {
           .withIssuer("Gourmet Conecta")
           .withSubject(user.getEmail())
           .sign(algorithm);
-
-      System.out.println("token: 111" + token);
 
       return token;
     } catch (JWTCreationException exception) {
@@ -35,7 +31,6 @@ public class TokenService {
 
   public String validateToken(String token) {
     try {
-      System.out.println("token: " + token);
 
       Algorithm algorithm = Algorithm.HMAC256(secret);
       String subject = JWT.require(algorithm)
