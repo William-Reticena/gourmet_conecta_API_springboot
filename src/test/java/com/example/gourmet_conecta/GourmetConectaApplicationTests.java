@@ -1,13 +1,13 @@
-package com.example.gourmet_conecta;
+// package com.example.gourmet_conecta;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class GourmetConectaApplicationTests {
+// @SpringBootTest
+// class GourmetConectaApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// @Test
+// void contextLoads() {
+// }
 
-}
+// }

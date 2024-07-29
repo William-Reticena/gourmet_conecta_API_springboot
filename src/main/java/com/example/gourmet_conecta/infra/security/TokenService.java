@@ -7,20 +7,25 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.gourmet_conecta.domain.user.User;
+import com.example.gourmet_conecta.domain.user.UserEntity;
 
 @Service
 public class TokenService {
   @Value("${api.security.token.secret}")
   private String secret;
 
-  public String generateToken(User user) {
+  public String generateToken(UserEntity user) {
+    System.out.println("secret: " + secret);
+    System.out.println("user: " + user);
     try {
       Algorithm algorithm = Algorithm.HMAC256(secret);
+
       String token = JWT.create()
           .withIssuer("Gourmet Conecta")
           .withSubject(user.getEmail())
           .sign(algorithm);
+
+      System.out.println("token: 111" + token);
 
       return token;
     } catch (JWTCreationException exception) {
@@ -30,6 +35,8 @@ public class TokenService {
 
   public String validateToken(String token) {
     try {
+      System.out.println("token: " + token);
+
       Algorithm algorithm = Algorithm.HMAC256(secret);
       String subject = JWT.require(algorithm)
           .withIssuer("Gourmet Conecta")

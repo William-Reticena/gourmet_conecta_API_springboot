@@ -12,28 +12,41 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "user")
-@Entity(name = "user")
+@Entity
+@Table(name = "users")
+@Data
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class User implements UserDetails {
+public class UserEntity implements UserDetails {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String firstName;
+  private String first_name;
 
-  private String lastName;
+  private String last_name;
 
   private String email;
 
   private String password;
+
+  public UserEntity(String firstName, String lastName, String email, String password) {
+    this.first_name = firstName;
+    this.last_name = lastName;
+    this.email = email;
+    this.password = password;
+  }
+
+  public UserEntity(String email) {
+    this.email = email;
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -43,5 +56,25 @@ public class User implements UserDetails {
   @Override
   public String getUsername() {
     return email;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
 }

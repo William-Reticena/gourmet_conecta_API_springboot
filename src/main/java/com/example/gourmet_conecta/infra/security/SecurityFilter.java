@@ -1,6 +1,7 @@
 package com.example.gourmet_conecta.infra.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,19 +25,33 @@ public class SecurityFilter extends OncePerRequestFilter {
   @Autowired
   UserRepository userRepository;
 
+  private static final List<String> PUBLIC_URLS = List.of("/auth/login", "/auth/register");
+
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    String token = this.recoverToken(request);
 
-    if (token != null) {
-      String login = tokenService.validateToken(token);
-      UserDetails userDetails = userRepository.findByEmail(login);
+    String requestURI = request.getRequestURI();
 
-      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
-          userDetails.getAuthorities());
+    System.out.println(requestURI);
 
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+    if (!PUBLIC_URLS.contains(requestURI)) {
+
+      String token = this.recoverToken(request);
+
+      if (token != null) {
+        String login = tokenService.validateToken(token);
+        UserDetails userDetails = userRepository.findByEmail(login);
+
+        if (userDetails != null) {
+          UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+              null,
+              userDetails.getAuthorities());
+
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+      }
+
     }
 
     filterChain.doFilter(request, response);
